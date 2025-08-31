@@ -1,0 +1,10 @@
+magentoUsername: admin
+magentoPassword: admin123
+magentoEmail: admin@example.com
+magentoFirstName: Admin
+magentoLastName: User
+service:
+  type: NodePort
+  nodePorts:
+    http: 30081
+    https: 30082

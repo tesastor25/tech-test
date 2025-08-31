@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webmvc
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webmvc
+  template:
+    metadata:
+      labels:
+        app: webmvc
+    spec:
+      containers:
+        - name: webmvc
+          image: eshop/webmvc:latest
+          ports:
+            - containerPort: 80
+          # env:
+          #   - name: CatalogUrlHC
+          #     value: "http://catalog-api.default.svc.cluster.local/hc"
+          #   - name: OrderingUrlHC
+          #     value: "http://ordering-api.default.svc.cluster.local/hc"
+          #   - name: BasketUrlHC
+          #     value: "http://basket-api.default.svc.cluster.local/hc"
+          #   - name: IdentityUrlHC
+          #     value: "http://identity-api.default.svc.cluster.local/hc"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webmvc
+  namespace: default
+spec:
+  selector:
+    app: webmvc
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
+

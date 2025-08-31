@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basket-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basket-api
+  template:
+    metadata:
+      labels:
+        app: basket-api
+    spec:
+      containers:
+        - name: basket-api
+          image: eshop/basket.api:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: ConnectionStrings__BasketDB
+              value: "redis:6379"
+
+            # 👇 ini yang benar
+            - name: EventBusConnection
+              value: "rabbitmq"
+            - name: EventBusUserName
+              value: "admin"
+            - name: EventBusPassword
+              value: "admin123"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: basket-api
+  namespace: default
+spec:
+  selector:
+    app: basket-api
+  ports:
+    - port: 80
+      targetPort: 80

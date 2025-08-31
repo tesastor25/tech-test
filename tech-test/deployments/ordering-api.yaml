@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-api
+  template:
+    metadata:
+      labels:
+        app: ordering-api
+    spec:
+      containers:
+        - name: ordering-api
+          image: eshop/ordering.api:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: ConnectionStrings__OrderingDb
+              value: "Server=sqlserver.default.svc.cluster.local,1433;Database=OrderingDb;User Id=sa;Password=Password123!"
+            - name: EventBusConnection
+              value: "rabbitmq.default.svc.cluster.local"
+            - name: EventBusUserName
+              value: "admin"
+            - name: EventBusPassword
+              value: "admin123"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ordering-api
+  namespace: default
+spec:
+  selector:
+    app: ordering-api
+  ports:
+    - port: 80
+      targetPort: 80

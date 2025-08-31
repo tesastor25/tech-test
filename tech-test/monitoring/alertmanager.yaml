@@ -1,0 +1,13 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "telegram"
+
+receivers:
+- name: "telegram"
+  telegram_configs:
+  - bot_token: "<TELEGRAM_BOT_TOKEN>"
+    chat_id: "<CHAT_ID>"
+    message: "⚠️ Alert: {{ .CommonAnnotations.summary }}"
+
